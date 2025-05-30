@@ -32,10 +32,36 @@ const dialogVisible = computed({
 })
 
 const serie = ref<Serie>({ ...props.serie })
+const idiomas = ['Español', 'Inglés', 'Chino', 'Coreano']
 
 async function obtenerPaises() {
   paises.value = await http.get('paises').then((response) => response.data)
 }
+watch(
+  () => props.mostrar,
+  (nuevoValor) => {
+    if (nuevoValor) {
+      obtenerPaises()
+      if (props.serie?.id) {
+        serie.value = {
+          ...props.serie,
+          idPais: props.serie.pais?.id ?? 0,
+          fechaEstreno:
+            typeof props.serie.fechaEstreno === 'string'
+              ? new Date(props.serie.fechaEstreno)
+              : props.serie.fechaEstreno,
+          idiomaPrincipal:
+            idiomas.find(
+              (idioma) =>
+                idioma.toLowerCase() === (props.serie.idiomaPrincipal?.toLowerCase() ?? ''),
+            ) ?? '',
+        }
+      } else {
+        serie.value = {} as Serie
+      }
+    }
+  },
+)
 
 async function handleSave() {
   try {
@@ -46,6 +72,7 @@ async function handleSave() {
       director: serie.value.director,
       temporadas: serie.value.temporadas,
       fechaEstreno: serie.value.fechaEstreno.toISOString(),
+      idiomaPrincipal: serie.value.idiomaPrincipal,
     }
     console.log('Datos que envío:', body)
     if (props.modoEdicion) {
@@ -60,24 +87,6 @@ async function handleSave() {
     alert(error?.response?.data?.message)
   }
 }
-
-watch(
-  () => props.mostrar,
-  async (nuevoValor) => {
-    if (nuevoValor) {
-      await obtenerPaises()
-      if (props.serie?.id) {
-        serie.value = { ...props.serie }
-        serie.value.idPais=props.serie.pais.id
-        if (typeof serie.value.fechaEstreno === 'string') {
-          serie.value.fechaEstreno = new Date(serie.value.fechaEstreno)
-        }
-      } else {
-        serie.value = {} as Serie
-      }
-    }
-  },
-)
 </script>
 
 <template>
@@ -127,6 +136,16 @@ watch(
           class="flex-auto"
           date-format="yy-mm-dd"
           show-icon
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="idiomaPrincipal" class="font-semibold w-3">Idioma Principal</label>
+        <Select
+          id="idiomaPrincipal"
+          v-model="serie.idiomaPrincipal"
+          :options="idiomas"
+          placeholder="Seleccionar un Idioma"
+          class="flex-auto"
         />
       </div>
       <div class="flex justify-end gap-2">

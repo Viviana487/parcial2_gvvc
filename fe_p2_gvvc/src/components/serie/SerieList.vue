@@ -70,6 +70,7 @@ defineExpose({ obtenerLista })
             <th>Director</th>
             <th>Temporadas</th>
             <th>Fecha de Estreno</th>
+            <th>Idioma Principal</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -82,6 +83,7 @@ defineExpose({ obtenerLista })
             <td>{{ serie.director }}</td>
             <td>{{ serie.temporadas }}</td>
             <td>{{ serie.fechaEstreno }}</td>
+            <td>{{ serie.idiomaPrincipal }}</td>
             <td>
               <Button icon="pi pi-pencil" aria-label="Editar" text @click="emitirEdicion(serie)" />
               <Button

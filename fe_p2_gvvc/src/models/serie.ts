@@ -8,5 +8,6 @@ export interface Serie {
   director: string
   temporadas: number
   fechaEstreno: Date
+  idiomaPrincipal: string
   pais: Pais
 }

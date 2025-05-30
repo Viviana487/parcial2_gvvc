@@ -33,6 +33,9 @@ export class Serie {
   @Column({ name: 'fecha_estreno' })
   fechaEstreno: Date;
 
+  @Column('varchar', { name: 'idioma_principal', nullable: true })
+  idiomaPrincipal: string;
+
   @CreateDateColumn({ name: 'fecha_creacion' })
   fechaCreacion: Date;
 

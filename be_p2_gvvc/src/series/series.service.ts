@@ -14,6 +14,7 @@ export class SeriesService {
       idPais: createSerieDto.idPais,
       titulo: createSerieDto.titulo.trim(),
       director: createSerieDto.director.trim(),
+      idiomaPrincipal: createSerieDto.idiomaPrincipal.trim(),
     });
 
     if (existe) throw new ConflictException('La serie ya existe');
@@ -25,6 +26,7 @@ export class SeriesService {
     serie.director = createSerieDto.director.trim();
     serie.temporadas = createSerieDto.temporadas;
     serie.fechaEstreno = createSerieDto.fechaEstreno;
+    serie.idiomaPrincipal = createSerieDto.idiomaPrincipal.trim();
     return this.seriesRepository.save(serie);
   }
 
@@ -38,6 +40,7 @@ export class SeriesService {
         director: true,
         temporadas: true,
         fechaEstreno: true,
+        idiomaPrincipal: true,
         pais: {
           id: true,
           descripcion: true,
@@ -57,27 +60,10 @@ export class SeriesService {
     return serie;
   }
 
-  async update(id: number, updateSerieDto: UpdateSerieDto): Promise<Serie[]> {
+  async update(id: number, updateSerieDto: UpdateSerieDto): Promise<Serie> {
     const serie = await this.findOne(id);
-
-    const serieUpdate = Object.assign(serie, updateSerieDto);
-    await this.seriesRepository.save(serieUpdate);
-    return this.seriesRepository.find({
-      where: { id },
-      relations: { pais: true },
-      select: {
-        id: true,
-        titulo: true,
-        sinopsis: true,
-        director: true,
-        temporadas: true,
-        fechaEstreno: true,
-        pais: {
-          id: true,
-          descripcion: true,
-        },
-      },
-    });
+    Object.assign(serie, updateSerieDto);
+    return this.seriesRepository.save(serie);
   }
 
   async remove(id: number) {

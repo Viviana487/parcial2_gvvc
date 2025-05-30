@@ -35,4 +35,10 @@ export class CreateSerieDto {
   @IsDefined({ message: 'El campo fechaEstreno debe estar definido' })
   @IsDateString({}, { message: 'El campo fechaEstreno debe ser tipo fecha' })
   readonly fechaEstreno: Date;
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'El campo idiomaPrincipal es obligatorio' })
+  @IsString({ message: 'El campo idiomaPrincipal debe ser de tipo cadena' })
+  @MaxLength(50, { message: 'El campo idiomaPrincipal no debe ser mayor a 50 caracteres' })
+  readonly idiomaPrincipal: string;
 }
